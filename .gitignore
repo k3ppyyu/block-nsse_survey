@@ -1,0 +1,17 @@
+# IDE
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*~
+.env
+
+# Dependencies
+node_modules/
+vendor/
+
