@@ -110,16 +110,63 @@ class block_nsse_survey extends block_list {
         $this->content->footer = '';
 
         $blockmessage = get_config('block_nsse_survey', 'blockmessage');
-        $linktag = '<center>
-                        <a href="' . format_string($surveylink) . '" target="_blank">
+        $linktag = '<div class="text-center">
+                        <a href="' . format_string($surveylink) . '" target="_blank" class="btn btn-primary btn-lg">
                             <i class="fa fa-check"></i> <strong>Click here to access your survey</strong>
                         </a>
-                    </center>';
+                    </div>';
 
-        // Add survey link either on the top or bottom of the block.
-        $text = get_config('block_nsse_survey', 'placement') == 'top' ? $linktag . $blockmessage : $blockmessage . $linktag;
-        $this->content->items[] = $text;
+        // Get header image URL from stored file setting.
+        $headerimageurl = $this->get_header_image_url();
+
+        // Get image link URL from settings.
+        $imageurl = get_config('block_nsse_survey', 'imageurl');
+
+        // Prepare context for Mustache template.
+        $context = [
+            'headerimage' => $headerimageurl,
+            'imageurl' => $imageurl,
+            'blockmessage' => $blockmessage,
+            'surveylink' => $linktag,
+        ];
+
+        // Render the template.
+        $this->content->items[] = $OUTPUT->render_from_template('block_nsse_survey/content', $context);
 
         return $this->content;
+    }
+
+    /**
+     * Get the URL of the header image file if it exists.
+     *
+     * @return string|null The URL of the header image, or null if not set
+     */
+    private function get_header_image_url() {
+        global $OUTPUT;
+
+        $fs = get_file_storage();
+        $files = $fs->get_area_files(
+            context_system::instance()->id,
+            'block_nsse_survey',
+            'headerimage',
+            0,
+            'itemid',
+            false
+        );
+
+        if (empty($files)) {
+            return null;
+        }
+
+        $file = reset($files);
+        return moodle_url::make_pluginfile_url(
+            $file->get_contextid(),
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename(),
+            false
+        )->out();
     }
 }

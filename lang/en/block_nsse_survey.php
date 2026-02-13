@@ -48,3 +48,12 @@ $string['matchfield_help'] = 'What userfield will be used to match the STUDENTID
 
 $string['placement'] = 'Link Placement';
 $string['placement_help'] = 'Paste in CSV data';
+
+$string['headerimage'] = 'Header Image';
+$string['headerimage_help'] = 'Upload an image file to display in the header of the NSSE Survey block';
+
+$string['imageurl'] = 'Image URL Link';
+$string['imageurl_help'] = 'Enter a URL that users will be directed to when they click on the header image';
+
+$string['headerimagealt'] = 'NSSE Survey Header';
+

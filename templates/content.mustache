@@ -1,0 +1,32 @@
+{{!
+    NSSE Survey block content template
+
+    Context variables:
+    - headerimage: URL to the header image (optional)
+    - imageurl: URL to navigate to when image is clicked (optional)
+    - blockmessage: The main message content (HTML)
+    - surveylink: The survey link HTML
+}}
+<div class="nsse-survey-block">
+    {{#headerimage}}
+    <div class="nsse-survey-header-image mb-4">
+        {{#imageurl}}
+        <a href="{{imageurl}}" target="_blank">
+            <img src="{{headerimage}}" alt="{{#str}}headerimagealt, block_nsse_survey{{/str}}" class="img-fluid w-100" />
+        </a>
+        {{/imageurl}}
+        {{^imageurl}}
+        <img src="{{headerimage}}" alt="{{#str}}headerimagealt, block_nsse_survey{{/str}}" class="img-fluid w-100" />
+        {{/imageurl}}
+    </div>
+    {{/headerimage}}
+
+    <div class="nsse-survey-message mb-4">
+        {{{blockmessage}}}
+    </div>
+
+    <div class="nsse-survey-link text-center mt-3">
+        {{{surveylink}}}
+    </div>
+</div>
+

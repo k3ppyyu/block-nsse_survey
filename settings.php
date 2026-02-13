@@ -35,44 +35,63 @@ if ($hassiteconfig) {
         $description = new lang_string('csvdata_help', $package);
         $default = get_string('csvdatadefault', $package);
         $settings->add(new admin_setting_configtextarea('block_nsse_survey/csvdata',
-                                                        $name,
-                                                        $description,
-                                                        $default));
-        // Default email for upcoming course archiving.
-        $name = new lang_string('blockmessage', $package);
-        $description = new lang_string('blockmessage_help', $package);
-        $default = get_string('blockmessagedefault', $package);
-        $settings->add(new admin_setting_confightmleditor('block_nsse_survey/blockmessage',
-                                                          $name,
-                                                          $description,
-                                                          $default));
-        
-        // User variable to match on.
-        $name = new lang_string('matchfield', $package);
-        $description = new lang_string('matchfield_help', $package);
-        $default = 'idnumber';
-        $matchfield = ['idnumber' => get_string("idnumber"),
-                       'email' => get_string("email"),
-                       'username' => get_string("username"),
-                       'id' => 'Moodle ID',
-        ];
-        $settings->add(new admin_setting_configselect('block_nsse_survey/matchfield',
-                                                      $name,
-                                                      $description,
-                                                      $default,
-                                                      $matchfield));
+            $name,
+            $description,
+            $default));
 
-        // Place survey link at top or bottom.
-        $name = new lang_string('placement', $package);
-        $description = new lang_string('placement_help', $package);
-        $default = 'bottom';
-        $placement = ['top' => 'Top',
-                      'bottom' => 'Bottom',
-        ];
-        $settings->add(new admin_setting_configselect('block_nsse_survey/placement',
-                                                      $name,
-                                                      $description,
-                                                      $default,
-                                                      $placement));
+        // Header image upload.
+        $name = new lang_string('headerimage', $package);
+        $description = new lang_string('headerimage_help', $package);
+        $settings->add(new admin_setting_configstoredfile('block_nsse_survey/headerimage',
+            $name,
+            $description,
+            'headerimage',
+            0,
+            ['accepted_types' => 'image']));
+
+        // Header image URL link.
+        $name = new lang_string('imageurl', $package);
+        $description = new lang_string('imageurl_help', $package);
+        $settings->add(new admin_setting_configtext('block_nsse_survey/imageurl',
+            $name,
+            $description,
+            ''));
     }
+
+    // Default email for upcoming course archiving.
+    $name = new lang_string('blockmessage', $package);
+    $description = new lang_string('blockmessage_help', $package);
+    $default = get_string('blockmessagedefault', $package);
+    $settings->add(new admin_setting_confightmleditor('block_nsse_survey/blockmessage',
+        $name,
+        $description,
+        $default));
+
+    // User variable to match on.
+    $name = new lang_string('matchfield', $package);
+    $description = new lang_string('matchfield_help', $package);
+    $default = 'idnumber';
+    $matchfield = ['idnumber' => get_string("idnumber"),
+        'email' => get_string("email"),
+        'username' => get_string("username"),
+        'id' => 'Moodle ID',
+    ];
+    $settings->add(new admin_setting_configselect('block_nsse_survey/matchfield',
+        $name,
+        $description,
+        $default,
+        $matchfield));
+
+    // Place survey link at top or bottom.
+    $name = new lang_string('placement', $package);
+    $description = new lang_string('placement_help', $package);
+    $default = 'bottom';
+    $placement = ['top' => 'Top',
+        'bottom' => 'Bottom',
+    ];
+    $settings->add(new admin_setting_configselect('block_nsse_survey/placement',
+        $name,
+        $description,
+        $default,
+        $placement));
 }
