@@ -18,12 +18,14 @@
  * NSSE Survey block
  *
  * @package    block_nsse_survey
- * @copyright  None
+ * @copyright  2026 York University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026021200;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2015111600;        // Requires this Moodle version
-$plugin->component = 'block_nsse_survey'; // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2026031601;          // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2025041400;          // Requires Moodle 5.1 (build 2025041400).
+$plugin->component = 'block_nsse_survey'; // Full name of the plugin (used for diagnostics).
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->release   = '1.1 (Moodle 5.1)';

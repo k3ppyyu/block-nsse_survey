@@ -2,16 +2,18 @@
     NSSE Survey block content template
 
     Context variables:
-    - headerimage: URL to the header image (optional)
-    - imageurl: URL to navigate to when image is clicked (optional)
-    - blockmessage: The main message content (HTML)
-    - surveylink: The survey link HTML
+    - headerimage:     URL to the header image (optional)
+    - imageurl:        URL to navigate to when image is clicked (optional)
+    - blockmessage:    The main message content (HTML, triple-stache so HTML is not escaped)
+    - surveylink:      The survey URL (plain string, sanitised)
+    - placementtop:    Boolean — true when link placement is "top"
+    - placementbottom: Boolean — true when link placement is "bottom"
 }}
 <div class="nsse-survey-block">
     {{#headerimage}}
     <div class="nsse-survey-header-image mb-4">
         {{#imageurl}}
-        <a href="{{imageurl}}" target="_blank">
+        <a href="{{imageurl}}" target="_blank" rel="noopener noreferrer">
             <img src="{{headerimage}}" alt="{{#str}}headerimagealt, block_nsse_survey{{/str}}" class="img-fluid w-100" />
         </a>
         {{/imageurl}}
@@ -21,12 +23,25 @@
     </div>
     {{/headerimage}}
 
+    {{#placementtop}}
+    <div class="nsse-survey-link text-center mb-4">
+        <a href="{{surveylink}}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+            {{#pix}}i/valid, core{{/pix}}
+            <strong class="ms-1">{{#str}}clickhere, block_nsse_survey{{/str}}</strong>
+        </a>
+    </div>
+    {{/placementtop}}
+
     <div class="nsse-survey-message mb-4">
         {{{blockmessage}}}
     </div>
 
+    {{#placementbottom}}
     <div class="nsse-survey-link text-center mt-3">
-        {{{surveylink}}}
+        <a href="{{surveylink}}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+            {{#pix}}i/valid, core{{/pix}}
+            <strong class="ms-1">{{#str}}clickhere, block_nsse_survey{{/str}}</strong>
+        </a>
     </div>
+    {{/placementbottom}}
 </div>
-

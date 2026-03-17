@@ -11,7 +11,7 @@ The NSSE Survey block allows administrators to:
 - Match students using configurable user fields (ID number, email, username, or Moodle ID)
 - Position the survey link at the top or bottom of the block content
 
-The block uses a responsive Bootstrap 4 design that works seamlessly with Moodle 4.1+.
+The block uses a responsive Bootstrap 5 design that works seamlessly with Moodle 5.1+.
 
 ## Features
 
@@ -23,7 +23,7 @@ The block uses a responsive Bootstrap 4 design that works seamlessly with Moodle
 ### Header Image
 - Upload a custom header image to brand the block
 - Optional clickable image that directs users to a specified URL
-- Responsive image display using Bootstrap 4's `img-fluid` class
+- Responsive image display using Bootstrap 5's `img-fluid` class
 - Images are securely served through Moodle's file system
 
 ### Customizable Content
@@ -143,9 +143,9 @@ nsse_survey/
 
 ## Requirements
 
-- Moodle 4.1 or higher
-- PHP 7.4 or higher
-- Bootstrap 4 (included with Moodle 4.1+)
+- Moodle 5.1 or higher
+- PHP 8.2 or higher
+- Bootstrap 5 (included with Moodle 5.1+)
 
 ## License
 
@@ -157,11 +157,11 @@ This plugin is licensed under the GNU General Public License v3 or later. See th
 - Created by: Matt Lovell, Senior Director at Rose-Hulman Institute of Technology
 
 ### Recent Updates (2026)
-- Refactored to use Mustache templates
-- Added responsive Bootstrap 4 CSS styling
-- Implemented header image upload with file management
-- Added optional clickable image feature
-- Enhanced user experience with prominent call-to-action button
+- Upgraded to Moodle 5.1 compatibility
+- Migrated from Bootstrap 4 to Bootstrap 5
+- Replaced raw Font Awesome icon tags with Moodle pix icon helper
+- Updated context API to use `\core\context\system`
+- Added `MATURITY_STABLE` and release metadata to version.php
 - Updates by: Patrick Thibaudeau & Christian Quan Kep at York University
 
 ## Support
@@ -172,5 +172,5 @@ For issues, feature requests, or contributions, please contact your Moodle admin
 
 - [NSSE Survey Official Website](https://nsse.indiana.edu/)
 - [Moodle Block Documentation](https://docs.moodle.org/en/Block)
-- [Bootstrap 4 Documentation](https://getbootstrap.com/docs/4.0/)
+- [Bootstrap 5 Documentation](https://getbootstrap.com/docs/5.0/)
 
