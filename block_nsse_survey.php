@@ -18,135 +18,162 @@
  * NSSE Survey block
  *
  * @package    block_nsse_survey
- * @copyright  None
+ * @copyright  2026 York University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class block_nsse_survey extends block_list {
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * NSSE Survey block class.
+ *
+ * Displays a personalised survey link to the matched student.
+ *
+ * @package    block_nsse_survey
+ * @copyright  2026 York University
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class block_nsse_survey extends block_base {
 
     /**
      * Initialise the block instance.
-     * Sets up the common part of the block object.
      */
     public function init() {
-        $this->title = get_string('pluginname', 'block_nsse_survey') ;
+        $this->title = get_string('pluginname', 'block_nsse_survey');
     }
-    
+
     /**
      * Does this block have any editable configuration?
      *
-     * @return bool True if the block has any editable configuration, false otherwise
+     * @return bool
      */
     public function has_config() {
         return true;
     }
 
-	/**
-	 * Specifies the block is only available on the site page, not in any course pages.
-	 * 
-	 * @return array An array where the key is the block format, and the value is a boolean
-	 * indicating whether the block is available in that format.
-	 */
-	public function applicable_formats() {
-	    return [
-	        'site' => true, // Only available on the site page.
-            'my' => true,
+    /**
+     * Specifies the formats this block is available in.
+     *
+     * @return array
+     */
+    public function applicable_formats() {
+        return [
+            'site' => true,
+            'my'   => true,
         ];
-	}
+    }
 
     /**
      * Returns the content of the block.
      *
-     * @return stdClass|bool The content object if there is content, false otherwise
+     * @return stdClass|null
      */
     public function get_content() {
-        global $CFG, $USER, $DB, $OUTPUT;
+        global $USER, $OUTPUT;
 
-        // shortcut -  only for logged in users!
+        // Only for logged-in, non-guest users.
         if (!isloggedin() || isguestuser()) {
-            return false;
+            return null;
         }
 
-        if ($this->content !== NULL) {
+        if ($this->content !== null) {
             return $this->content;
         }
 
-        // Pull .csv file into array.
+        // Pull CSV data from plugin config into an array.
         $csvdata = get_config('block_nsse_survey', 'csvdata');
-        $csvfile = fopen("php://temp", 'r+');
-        fputs($csvfile, $csvdata);
+        if (empty($csvdata)) {
+            return null;
+        }
+
+        $csvfile = fopen('php://temp', 'r+');
+        fwrite($csvfile, $csvdata);
         rewind($csvfile);
         $csv = [];
-        while (($row = fgetcsv($csvfile, 0, ",")) !== FALSE) {
+        while (($row = fgetcsv($csvfile)) !== false) {
             $csv[] = $row;
         }
         fclose($csvfile);
 
-        // Remove the csv header row.
+        if (empty($csv)) {
+            return null;
+        }
+
+        // Remove the CSV header row.
         $headers = array_shift($csv);
 
-        // Find which column the STUDENTID column is.
+        if (empty($headers)) {
+            return null;
+        }
+
+        // Find which column holds the STUDENTID.
         $idkey = array_search('STUDENTID', $headers);
+        if ($idkey === false) {
+            return null;
+        }
 
-        // Find what userfield will be used to match STUDENTID.
+        // Find which column holds the SURVEYLINK.
+        $linkkey = array_search('SURVEYLINK', $headers);
+        if ($linkkey === false) {
+            return null;
+        }
+
+        // Determine which user field to match on.
         $matchfield = get_config('block_nsse_survey', 'matchfield');
+        if (empty($matchfield)) {
+            $matchfield = 'idnumber';
+        }
 
-        // Find row where STUDENTID matches.
+        // Find the row whose STUDENTID matches the current user's field value.
         $match = array_search($USER->$matchfield, array_column($csv, $idkey));
 
         if ($match === false) {
-            return false; // No match found.
+            return null;
         }
 
-        // Find which column the SURVEYLINK column is.
-        $linkkey = array_search('SURVEYLINK', $headers);
+        // Retrieve and sanitise the survey link URL.
+        $surveylink = clean_param(trim($csv[$match][$linkkey]), PARAM_URL);
 
-        // Get the surveylink for the matched user.
-        $surveylink = $csv[$match][$linkkey];
+        if (empty($surveylink)) {
+            return null;
+        }
 
-        $this->content = new stdClass();
-        $this->content->items = [];
-        $this->content->icons = [];
-        $this->content->footer = '';
+        $this->content          = new stdClass();
+        $this->content->text    = '';
+        $this->content->footer  = '';
 
-        $blockmessage = get_config('block_nsse_survey', 'blockmessage');
-        $linktag = '<div class="text-center">
-                        <a href="' . format_string($surveylink) . '" target="_blank" class="btn btn-primary btn-lg">
-                            <i class="fa fa-check"></i> <strong>Click here to access your survey</strong>
-                        </a>
-                    </div>';
+        $blockmessage    = get_config('block_nsse_survey', 'blockmessage');
+        $headerimageurl  = $this->get_header_image_url();
+        $imageurl        = clean_param(get_config('block_nsse_survey', 'imageurl'), PARAM_URL);
+        $placement       = get_config('block_nsse_survey', 'placement');
+        if (empty($placement)) {
+            $placement = 'bottom';
+        }
 
-        // Get header image URL from stored file setting.
-        $headerimageurl = $this->get_header_image_url();
-
-        // Get image link URL from settings.
-        $imageurl = get_config('block_nsse_survey', 'imageurl');
-
-        // Prepare context for Mustache template.
+        // Build context array for Mustache template.
         $context = [
-            'headerimage' => $headerimageurl,
-            'imageurl' => $imageurl,
-            'blockmessage' => $blockmessage,
-            'surveylink' => $linktag,
+            'headerimage'     => $headerimageurl,
+            'imageurl'        => $imageurl,
+            'blockmessage'    => $blockmessage,
+            'surveylink'      => $surveylink,
+            'placementtop'    => ($placement === 'top'),
+            'placementbottom' => ($placement === 'bottom'),
         ];
 
-        // Render the template.
-        $this->content->items[] = $OUTPUT->render_from_template('block_nsse_survey/content', $context);
+        $this->content->text = $OUTPUT->render_from_template('block_nsse_survey/content', $context);
 
         return $this->content;
     }
 
     /**
-     * Get the URL of the header image file if it exists.
+     * Get the URL of the header image file if one has been uploaded.
      *
-     * @return string|null The URL of the header image, or null if not set
+     * @return string|null The URL of the header image, or null if not set.
      */
     private function get_header_image_url() {
-        global $OUTPUT;
-
-        $fs = get_file_storage();
+        $fs    = get_file_storage();
         $files = $fs->get_area_files(
-            context_system::instance()->id,
+            \core\context\system::instance()->id,
             'block_nsse_survey',
             'headerimage',
             0,
@@ -167,6 +194,6 @@ class block_nsse_survey extends block_list {
             $file->get_filepath(),
             $file->get_filename(),
             false
-        )->out();
+        )->out(false);
     }
 }

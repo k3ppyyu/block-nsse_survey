@@ -18,55 +18,47 @@
  * NSSE Survey block library functions
  *
  * @package    block_nsse_survey
- * @copyright  None
+ * @copyright  2026 York University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Serve files from the NSSE Survey block file areas.
  *
- * @param stdClass $course The course object
- * @param stdClass $cm The course module object
- * @param stdClass $context The context object
- * @param string $filearea The file area
- * @param array $args Additional arguments
- * @param bool $forcedownload Whether to force download
- * @param array $options Additional options
+ * @param stdClass $course         The course object.
+ * @param stdClass $cm             The course module object.
+ * @param context  $context        The context object.
+ * @param string   $filearea       The file area.
+ * @param array    $args           Additional arguments.
+ * @param bool     $forcedownload  Whether to force download.
+ * @param array    $options        Additional options.
  * @return void
  */
-function block_nsse_survey_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-    // Check the context is system level.
+function block_nsse_survey_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
+    // The header image is stored in the system context.
     if ($context->contextlevel != CONTEXT_SYSTEM) {
-        return false;
+        send_file_not_found();
     }
 
-    // Check capability.
-    if (!has_capability('moodle/site:config', $context)) {
-        return false;
+    // Only the headerimage area is served.
+    if ($filearea !== 'headerimage') {
+        send_file_not_found();
     }
 
-    // Allow public access to the header image.
-    if ($filearea === 'headerimage') {
-        $itemid = array_shift($args);
-        $filename = array_pop($args);
+    // Require the user to be logged in (guests cannot see the block anyway).
+    require_login();
 
-        if (!$args) {
-            $filepath = '/';
-        } else {
-            $filepath = '/' . implode('/', $args) . '/';
-        }
+    $itemid   = array_shift($args);
+    $filename = array_pop($args);
+    $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
 
-        $fs = get_file_storage();
-        $file = $fs->get_file($context->id, 'block_nsse_survey', 'headerimage', $itemid, $filepath, $filename);
+    $fs   = get_file_storage();
+    $file = $fs->get_file($context->id, 'block_nsse_survey', 'headerimage', $itemid, $filepath, $filename);
 
-        if (!$file) {
-            return false;
-        }
-
-        \core\session\manager::write_close();
-        send_stored_file($file, null, 0, $forcedownload, $options);
+    if (!$file) {
+        send_file_not_found();
     }
 
-    return false;
+    \core\session\manager::write_close();
+    send_stored_file($file, null, 0, $forcedownload, $options);
 }
-

@@ -18,7 +18,7 @@
  * NSSE Survey block strings
  *
  * @package    block_nsse_survey
- * @copyright  None
+ * @copyright  2026 York University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,22 +32,19 @@ $string['csvdatadefault'] = 'STUDENTID,SURVEYLINK
 
 $string['blockmessage'] = 'NSSE Survey block message';
 $string['blockmessage_help'] = 'Message in block to display.';
-$string['blockmessagedefault'] = '
-<div>
-    <div>At Rose-Hulman Institute of Technology we want our students to have the best educational experience possible, and the National Survey of Student Engagement (NSSE) helps by providing vital information about activities in and out of the classroom. Your participation is critical, so I hope you will complete NSSE&mdash;an opportunity only available to first-year and senior students.<br><br></div>
-    <div>In appreciation for participating, students who complete the survey will be automatically entered in a random drawing to win 1 of 3 Rose-Hulman branded items from the bookstore (worth up to $150). Your chances of winning depend on how many complete the survey; 1045 students were invited to participate.<br><br></div>
-    <div>For help with logging into the survey or to find answers to a variety of other questions, please go to: <a href="https://nssesurvey.org/contact.cfm">https://nssesurvey.org/contact.cfm</a>. More information about NSSE is at nsse.indiana.edu. If you have other questions, please contact me at lovellmd@rose-hulman.edu or 812-877-8318.<br><br></div>
-    <div>Thank you in advance for taking a few moments to reflect on your experiences and help us strengthen Rose-Hulman Institute of Technology!<br><br></div>
-    <div>Sincerely,</div>
-    <div>Matt Lovell</div>
-    <div>Senior Director</div>
+$string['blockmessagedefault'] = '<div>
+    <p><strong>When you use your voice, great things happen!</strong>&nbsp;Tell us what has helped you learn and grow at York U and what we can improve by completing the National Survey of Student Engagement (NSSE). You\'ll be entered for a chance to win amazing prizes, just for completing the survey.</p>
+    <p>Need more info? Go to the NSSE website to learn more.</p>
 </div>';
 
 $string['matchfield'] = 'Match user field';
 $string['matchfield_help'] = 'What userfield will be used to match the STUDENTID field in the csv data?';
+$string['moodleid'] = 'Moodle ID';
 
 $string['placement'] = 'Link Placement';
-$string['placement_help'] = 'Paste in CSV data';
+$string['placement_help'] = 'Where should the survey link button appear — above or below the block message?';
+$string['top'] = 'Top';
+$string['bottom'] = 'Bottom';
 
 $string['headerimage'] = 'Header Image';
 $string['headerimage_help'] = 'Upload an image file to display in the header of the NSSE Survey block';
@@ -56,4 +53,6 @@ $string['imageurl'] = 'Image URL Link';
 $string['imageurl_help'] = 'Enter a URL that users will be directed to when they click on the header image';
 
 $string['headerimagealt'] = 'NSSE Survey Header';
+
+$string['clickhere'] = 'Click here to access your survey';
 
