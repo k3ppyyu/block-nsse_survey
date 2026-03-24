@@ -59,3 +59,5 @@ $string['clickhere'] = 'Click here to access your survey';
 $string['nsse_survey:addinstance'] = 'Add a new NSSE Survey block';
 $string['nsse_survey:myaddinstance'] = 'Add a new NSSE Survey block to Dashboard';
 
+$string['privacy:metadata'] = 'The plugin does not store user data.';
+

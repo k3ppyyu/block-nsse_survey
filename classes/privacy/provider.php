@@ -14,18 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_nsse_survey\privacy;
+
 /**
- * NSSE Survey block
+ * Class provider
  *
  * @package    block_nsse_survey
- * @copyright  2026 York University
+ * @copyright  2026 Carlos Arce <carlosarcelopera@catalyst-ca.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2026031602;          // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2025041400;          // Requires Moodle 5.1 (build 2025041400).
-$plugin->component = 'block_nsse_survey'; // Full name of the plugin (used for diagnostics).
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.1 (Moodle 5.1)';
+class provider implements \core_privacy\local\metadata\null_provider {
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}

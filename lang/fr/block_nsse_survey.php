@@ -58,3 +58,5 @@ $string['clickhere'] = 'Cliquez ici pour acc&eacute;der &agrave; votre sondage';
 
 $string['nsse_survey:addinstance'] = 'Ajouter un nouveau bloc Sondage NSSE';
 $string['nsse_survey:myaddinstance'] = 'Ajouter un nouveau bloc Sondage NSSE au tableau de bord';
+
+$string['privacy:metadata'] = 'Ce plugin ne stocke aucune donnée personnelle localement.';
