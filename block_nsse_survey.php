@@ -73,11 +73,15 @@ class block_nsse_survey extends block_list {
 
         // Pull .csv file into array.
         $csvdata = get_config('block_nsse_survey', 'csvdata');
+        if (empty($csvdata)) {
+            return null;
+        }
+
         $csvfile = fopen("php://temp", 'r+');
         fputs($csvfile, $csvdata);
         rewind($csvfile);
         $csv = [];
-        while (($row = fgetcsv($csvfile, 0, ",")) !== FALSE) {
+        while (($row = fgetcsv($csvfile, 0, ",", '"', "\\")) !== FALSE) {
             $csv[] = $row;
         }
         fclose($csvfile);
@@ -85,24 +89,47 @@ class block_nsse_survey extends block_list {
         // Remove the csv header row.
         $headers = array_shift($csv);
 
+        if (empty($headers)) {
+            return null;
+        }
+
         // Find which column the STUDENTID column is.
         $idkey = array_search('STUDENTID', $headers);
+        if ($idkey === false) {
+            return null;
+        }
+
+        // Find which column the SURVEYLINK column is — check early so we
+        // don't do expensive work if the column is missing.
+        $linkkey = array_search('SURVEYLINK', $headers);
+        if ($linkkey === false) {
+            return null;
+        }
 
         // Find what userfield will be used to match STUDENTID.
         $matchfield = get_config('block_nsse_survey', 'matchfield');
 
-        // Find row where STUDENTID matches.
-        $match = array_search($USER->$matchfield, array_column($csv, $idkey));
-
-        if ($match === false) {
-            return false; // No match found.
+        // Retrieve the user's match value — hide block if empty or field doesn't exist.
+        $uservalue = property_exists($USER, $matchfield) ? trim((string)$USER->$matchfield) : '';
+        if (empty($uservalue)) {
+            return null;
         }
 
-        // Find which column the SURVEYLINK column is.
-        $linkkey = array_search('SURVEYLINK', $headers);
+        // Find the row whose STUDENTID matches the current user's field value.
+        // Trim all STUDENTID values from the CSV to guard against whitespace in exports.
+        // The strict=true flag prevents loose matches (e.g. "0" == false, "" == null).
+        $studentids = array_map('trim', array_column($csv, $idkey));
+        $match = array_search($uservalue, $studentids, true);
+
+        if ($match === false) {
+            return null; // No matching student ID — hide the block.
+        }
 
         // Get the surveylink for the matched user.
-        $surveylink = $csv[$match][$linkkey];
+        $surveylink = clean_param(trim($csv[$match][$linkkey]), PARAM_URL);
+        if (empty($surveylink)) {
+            return null;
+        }
 
         $this->content = new stdClass();
         $this->content->items = [];
